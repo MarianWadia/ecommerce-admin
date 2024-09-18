@@ -17,6 +17,7 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
 	name: z.string().min(3).max(255),
@@ -34,14 +35,22 @@ export default function StoreModal() {
 		// Submit form data to the server here
 		try {
 			setLoading(true);
-			const response = await axios.post('/api/stores', data)
-			console.log("Store created successfully:", response.status, response.data);
+			const response = await axios.post("/api/stores", data);
+			console.log(
+				"Store created successfully:",
+				response.status,
+				response.data
+			);
+			if (response.status === 200) {
+				toast.success("Store created successfully")
+				form.reset()
+			}
 		} catch (error) {
+			toast.error("Something went wrong");
 			console.log("Error from submit store:", error);
-		}finally{
+		} finally {
 			setLoading(false);
 		}
-		
 	};
 	return (
 		<Modal
@@ -68,10 +77,16 @@ export default function StoreModal() {
 								)}
 							/>
 							<div className="w-full flex flex-row items-center gap-x-3 justify-end capitalize pt-4">
-								<Button disabled={loading} variant="outline" onClick={storeModal.onClose}>
+								<Button
+									disabled={loading}
+									variant="outline"
+									onClick={storeModal.onClose}
+								>
 									Cancel
 								</Button>
-								<Button disabled={loading} type="submit">Continue</Button>
+								<Button disabled={loading} type="submit">
+									Continue
+								</Button>
 							</div>
 						</form>
 					</Form>
