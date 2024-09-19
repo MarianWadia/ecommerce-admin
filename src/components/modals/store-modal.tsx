@@ -18,6 +18,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
 	name: z.string().min(3).max(255),
@@ -25,6 +26,7 @@ const formSchema = z.object({
 export default function StoreModal() {
 	const storeModal = useStoreModal();
 	const [loading, setLoading] = useState<boolean>(false);
+	const router = useRouter();
 	// zodResolver is being used to connect the Zod schema (formSchema) to the form validation process.
 	const form = useForm<z.infer<typeof formSchema>>({
 		defaultValues: { name: "" },
@@ -42,8 +44,9 @@ export default function StoreModal() {
 				response.data
 			);
 			if (response.status === 200) {
-				toast.success("Store created successfully")
-				form.reset()
+				form.reset();
+				storeModal.onClose();
+				window.location.assign(`/${response?.data?.id}`);
 			}
 		} catch (error) {
 			toast.error("Something went wrong");
@@ -52,6 +55,7 @@ export default function StoreModal() {
 			setLoading(false);
 		}
 	};
+
 	return (
 		<Modal
 			title="Create Store"
