@@ -11,9 +11,6 @@ export default function SetupPage() {
     }
   },[isOpen, onOpen])
   return (
-    <main className="p-4">
-      Hello Admin,
-      This is a protected route😎🔒 
-    </main>
+    null
   );
 }
