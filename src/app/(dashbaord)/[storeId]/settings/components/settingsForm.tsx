@@ -1,8 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
 import Heading from "@/components/ui/heading";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Store } from "@prisma/client";
@@ -29,22 +37,46 @@ export default function SettingsForm({ initialData }: settingsFormProps) {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [open, setOpen] = useState<boolean>(false);
 	async function onSubmit(data: SettingsFormsValues) {
-        console.log("data: ", data);
-    }
+		console.log("data: ", data);
+	}
 	return (
 		<>
 			<div className="flex items-center justify-between">
 				<Heading title="Settings" description="Manage store preferences" />
-				<Button variant="destructive" size="icon" onClick={() => {}}>
+				<Button disabled={loading} variant="destructive" size="icon" onClick={() => setOpen(true)}>
 					<TrashIcon className="w-5 h-5 text-white" />
 				</Button>
 			</div>
 			<Separator />
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                    
-                </form>
-            </Form>
+			<Form {...form}>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className="space-y-8 w-full"
+				>
+					<div className="grid grid-cols-3 gap-8">
+						<FormField
+							control={form.control}
+							name="name"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Name</FormLabel>
+									<FormControl>
+										<Input
+											disabled={loading}
+											placeholder="Store name"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</div>
+					<Button type="submit" disabled={loading}>
+						Save Changes
+					</Button>
+				</form>
+			</Form>
 		</>
 	);
 }
