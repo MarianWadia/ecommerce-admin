@@ -1,6 +1,7 @@
 "use client";
 
 import AlertModal from "@/components/modals/alert-modal";
+import ApiAlert from "@/components/ui/apiAlert";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -13,6 +14,7 @@ import {
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import UseOrigin from "@/hooks/use-origin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Store } from "@prisma/client";
 import axios from "axios";
@@ -36,6 +38,7 @@ type SettingsFormsValues = z.infer<typeof formSchema>;
 export default function SettingsForm({ initialData }: settingsFormProps) {
 	const router = useRouter();
 	const { storeId } = useParams();
+	const  origin = UseOrigin() 
 	const form = useForm<SettingsFormsValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: initialData,
@@ -119,6 +122,12 @@ export default function SettingsForm({ initialData }: settingsFormProps) {
 					</Button>
 				</form>
 			</Form>
+			<Separator />
+			<ApiAlert
+				title="NEXT_PUBLIC_API_URL"
+				description={`${origin}/api/${storeId}`}
+				variant="public"
+			/>
 		</>
 	);
 }
