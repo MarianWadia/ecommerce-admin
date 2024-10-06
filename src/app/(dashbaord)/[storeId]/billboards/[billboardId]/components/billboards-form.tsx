@@ -31,8 +31,7 @@ interface billboardsFormProps {
 
 const formSchema = z.object({
 	label: z.string().min(1),
-    imageUrl: z.string().min(1),
-
+	imageUrl: z.string().min(1),
 });
 
 type BillboardsFormsValues = z.infer<typeof formSchema>;
@@ -40,21 +39,21 @@ type BillboardsFormsValues = z.infer<typeof formSchema>;
 export default function BillboardsForm({ initialData }: billboardsFormProps) {
 	const router = useRouter();
 	const { storeId } = useParams();
-	const  origin = UseOrigin() 
+	const origin = UseOrigin();
 	const form = useForm<BillboardsFormsValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: initialData || {
-            label: "",
-            imageUrl: ""
-        },
+			label: "",
+			imageUrl: "",
+		},
 	});
 	const [loading, setLoading] = useState<boolean>(false);
 	const [open, setOpen] = useState<boolean>(false);
 
-    const title = initialData ? "Edit Billboard" : "Create Billboard";
-    const description = initialData ? "Edit a Billboard" : "Add a new Billboard";
-    const toastMessage = initialData ? "Billboard updated" : "Billboard created";
-    const actionBtn = initialData ? "Save changes" : "Create";
+	const title = initialData ? "Edit Billboard" : "Create Billboard";
+	const description = initialData ? "Edit a Billboard" : "Add a new Billboard";
+	const toastMessage = initialData ? "Billboard updated" : "Billboard created";
+	const actionBtn = initialData ? "Save changes" : "Create";
 
 	async function onSubmit(data: BillboardsFormsValues) {
 		try {
@@ -94,7 +93,8 @@ export default function BillboardsForm({ initialData }: billboardsFormProps) {
 			/>
 			<div className="flex items-center justify-between">
 				<Heading title={title} description={description} />
-				<Button
+				{initialData && (
+					<Button
 					disabled={loading}
 					variant="destructive"
 					size="icon"
@@ -102,6 +102,7 @@ export default function BillboardsForm({ initialData }: billboardsFormProps) {
 				>
 					<TrashIcon className="w-5 h-5 text-white" />
 				</Button>
+				)}
 			</div>
 			<Separator />
 			<Form {...form}>
